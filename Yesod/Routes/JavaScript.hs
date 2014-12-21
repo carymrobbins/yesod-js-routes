@@ -44,9 +44,10 @@ buildMethod pieces methodName = method <> ":function(){return {method:\"" <> met
     method = toLower . pack $ methodName
 
 buildUrl :: [Piece String] -> Text
-buildUrl = snd . foldl' action (0 :: Int, "")
+buildUrl = snd . foldl' action (0 :: Int, "/")
   where
     sep = "/"
     action (counter, t) piece = case piece of
-        Static s -> (counter, t <> sep <> pack s)
-        Dynamic _ -> (counter + 1, t <> sep <> "\"+arguments[" <> (pack . show) counter <> "]+\"")
+        Static s -> (counter, t <> pack s <> sep)
+        Dynamic _ -> (counter + 1, t <> "\"+arguments[" <> (pack . show) counter <> "]+\"" <> sep)
+
